@@ -12,7 +12,7 @@ public class EmployeePayrollService {
     }
 
     public void updateEmployeeSalary(String name, double salary) {
-        int result = employeePayrollDBService.updateEmployeeData(name, salary);
+        int result = employeePayrollDBService.updateEmployeeDataUsingPreparedStatement(name, salary);
         if (result == 0) return;
         EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
         if (employeePayrollData != null) employeePayrollData.salary = salary;

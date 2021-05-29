@@ -50,6 +50,20 @@ public class EmployeePayrollDBService {
         return 0;
     }
 
+    public int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
+        try (Connection connection = this.getConnection()) {
+            String sql = "update employee_payroll set salary=? where name=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, salary);
+            preparedStatement.setString(2, name);
+            int result = preparedStatement.executeUpdate();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public List<EmployeePayrollData> getEmployeePayrollData(String name) {
         List<EmployeePayrollData> employeePayrollList = null;
         if (this.employeePayrollDataStatement == null)
