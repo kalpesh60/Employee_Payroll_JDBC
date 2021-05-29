@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollService {
@@ -34,5 +35,11 @@ public class EmployeePayrollService {
         if (iOservice.equals(IOService.DB_IO))
             this.employeePayrollList = employeePayrollDBService.readData();
         return this.employeePayrollList;
+    }
+
+    public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) {
+        if (ioService.equals(IOService.DB_IO))
+            return employeePayrollDBService.getEmployeePayrollForDateRange(startDate, endDate);
+        return null;
     }
 }
