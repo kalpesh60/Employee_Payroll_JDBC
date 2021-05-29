@@ -1,15 +1,38 @@
 import java.util.List;
 
 public class EmployeePayrollService {
+
     public enum IOService {FILE_IO,DB_IO}
 
     private List<EmployeePayrollData> employeePayrollList;
+    private EmployeePayrollDBService employeePayrollDBService;
 
-    public EmployeePayrollService() {}
+    public EmployeePayrollService() {
+        employeePayrollDBService = EmployeePayrollDBService.getInstance();
+    }
+
+    public void updateEmployeeSalary(String name, double salary) {
+        int result = employeePayrollDBService.updateEmployeeData(name, salary);
+        if (result == 0) return;
+        EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+        if (employeePayrollData != null) employeePayrollData.salary = salary;
+    }
+
+    public boolean checkEmployeePayrollInSyncWithDB(String name) {
+        List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+        return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+    }
+
+    private EmployeePayrollData getEmployeePayrollData(String name) {
+        return this.employeePayrollList.stream()
+                .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
+                .findFirst()
+                .orElse(null);
+    }
 
     public List<EmployeePayrollData> readEmployeePayrollData(IOService iOservice) {
         if (iOservice.equals(IOService.DB_IO))
-            this.employeePayrollList = new EmployeePayrollDBService().readData();
+            this.employeePayrollList = employeePayrollDBService.readData();
         return this.employeePayrollList;
     }
 }
